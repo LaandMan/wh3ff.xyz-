@@ -24,7 +24,7 @@
             position: fixed;
             top: 0; left: 0;
             width: 100vw; height: 100vh;
-            z-index: -2;
+            z-index: 0;
             overflow: hidden;
         }
         .video-background video {
@@ -37,7 +37,7 @@
             top: 0; left: 0;
             width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
+            z-index: 1;
         }
         .audio-prompt {
             position: fixed;
@@ -69,6 +69,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             width: 340px;
             position: relative;
+            z-index: 2;
             overflow: hidden;
             padding-bottom: 40px;
         }
@@ -136,7 +137,7 @@
 <body onclick="playAudio()">
 
     <div id="audio-screen" class="audio-prompt">
-        click to enter
+        CLICK ANYWHERE TO ENTER
     </div>
 
     <audio id="bg-music" loop>
@@ -167,7 +168,7 @@
 
         <div class="links">
             <a href="https://steamcommunity.com/id/wh3f/" target="_blank">steam</a>
-            <a href="https://steamcommunity.com/tradeoffer/new/?partner=838525581&token=zo-wkq57" target="_blank">trade link</a>
+            <a href="https://steamcommunity.com/tradeoffer/new/?partner=838525581&token=zo-wkq57m" target="_blank">trade link</a>
             <a href="https://soundcloud.com/fourgonnerbeats" target="_blank">tuff ass beats</a>
         </div>
     </div>
