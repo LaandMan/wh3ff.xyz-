@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://googleapis.com" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <title>wh3ff</title>
-    <link rel="icon" type="image/gif" href="https://tenor.com">
+    <link rel="icon" type="image/gif" href="stars.gif">
     <style>
         body {
             background-color: #0a0a0a;
             color: #ffffff;
-            font-family: 'Geist', sans-serif;
+            font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -140,12 +140,12 @@
     </div>
 
     <audio id="bg-music" loop>
-        <source src="https://guns.lol" type="audio/mpeg">
+        <source src="bg-music.mp3" type="audio/mpeg">
     </audio>
 
     <div class="video-background">
         <video autoplay loop muted playsinline>
-            <source src="https://guns.lol" type="video/mp4">
+            <source src="bg-video.mp4" type="video/mp4">
         </video>
     </div>
     <div class="dark-overlay"></div>
@@ -153,13 +153,13 @@
     <div class="container">
         <div id="banner" class="profile-banner"></div>
         <div class="avatar-container">
-            <img id="avatar" class="profile-pic" src="https://placeholder.com" alt="Avatar">
+            <img id="avatar" class="profile-pic" src="" alt="Avatar">
             <div id="status" class="status-dot"></div>
         </div>
         <h1 id="username">Loading...</h1>
         <div id="tag" class="discord-tag">@username</div>
         <p id="activity" class="custom-status">Fetching status...</p>
-        
+
         <div class="discord-actions">
             <a id="profile-link" href="https://discord.com" target="_blank" class="disc-btn">View Profile</a>
             <button id="copy-btn" class="disc-btn" onclick="copyUser(event)">Copy User</button>
@@ -179,39 +179,44 @@
         function playAudio() {
             const music = document.getElementById('bg-music');
             const promptScreen = document.getElementById('audio-screen');
-            music.play().then(() => {
-                promptScreen.classList.add('hidden');
-            }).catch(err => { console.log("Audio awaiting gesture."); });
+            promptScreen.classList.add('hidden');
+            music.play().catch(err => {
+                console.log("Audio play blocked or failed:", err);
+            });
         }
 
         async function fetchDiscord() {
             try {
-                const response = await fetch(`https://lanyard.rest{530081539220963355}`);
+                const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
                 const resData = await response.json();
                 if (resData.success) {
                     const user = resData.data;
                     rawUsername = user.discord_user.username;
                     document.getElementById('username').innerText = user.discord_user.global_name || user.discord_user.username;
                     document.getElementById('tag').innerText = `@${rawUsername}`;
+
                     const avatarId = user.discord_user.avatar;
-                    document.getElementById('avatar').src = `https://discordapp.com{530081539220963355}/${avatarId}.png?size=256`;
+                    document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${avatarId}.png?size=256`;
+
                     const bannerElement = document.getElementById('banner');
                     if (user.discord_user.banner) {
                         const isGif = user.discord_user.banner.startsWith('a_');
                         const ext = isGif ? 'gif' : 'png';
-                        bannerElement.style.backgroundImage = `url('https://discordapp.com{530081539220963355}/${user.discord_user.banner}.${ext}?size=600')`;
+                        bannerElement.style.backgroundImage = `url('https://cdn.discordapp.com/banners/${DISCORD_ID}/${user.discord_user.banner}.${ext}?size=600')`;
                     } else if (user.discord_user.banner_color) {
                         bannerElement.style.backgroundImage = 'none';
                         bannerElement.style.backgroundColor = user.discord_user.banner_color;
                     }
+
                     const statusDot = document.getElementById('status');
                     statusDot.className = 'status-dot ' + user.discord_status;
+
                     if (user.activities && user.activities.length > 0) {
                         const custom = user.activities.find(a => a.type === 4);
                         if (custom && custom.state) {
                             document.getElementById('activity').innerText = custom.state;
                         } else {
-                            document.getElementById('activity').innerText = `Playing ${user.activities.name}`;
+                            document.getElementById('activity').innerText = `Playing ${user.activities[0].name}`;
                         }
                     } else {
                         document.getElementById('activity').innerText = user.discord_status === 'offline' ? "Currently Offline" : "No Active Status";
