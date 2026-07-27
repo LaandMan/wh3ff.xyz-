@@ -162,7 +162,7 @@
             
             if (d.discord_user && d.discord_user.avatar) {
                 const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
-                avatarImg.src = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
+                avatarImg.src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.${ext}?size=256`;
             }
 
             const cStatusBox = document.getElementById('custom-status');
