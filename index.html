@@ -52,8 +52,7 @@
         <div id="mute-btn" class="audio-ctrl" onclick="toggleAudio()">🔊</div>
         
         <div class="avatar-container">
-            <!-- Fixed default image tracking to pull your actual live avatar link directly -->
-            <img id="avatar" class="avatar" src="https://discordapp.com" alt="Profile pic">
+            <img id="avatar" class="avatar" src="./stars.gif" alt="Profile pic">
             <div id="status" class="status-dot offline"></div>
         </div>
 
@@ -72,7 +71,6 @@
             </div>
         </div>
 
-        <!-- Relative local asset paths fixed below -->
         <div class="links-grid">
             <a href="https://discord.com" target="_blank" class="link-btn">
                 <img src="./stars.gif" class="stars-decor" alt="icon"> View Profile
@@ -104,15 +102,14 @@
             shield.style.opacity = '0';
             setTimeout(() => shield.remove(), 500);
             
-            // Fixed race condition: removed .load() to resolve playback interception crashes
             let playVideo = video.play();
             if (playVideo !== undefined) {
-                playVideo.catch(err => console.log("Video track error:", err));
+                playVideo.catch(err => console.log("Video fail:", err));
             }
             
             let playAudio = audio.play();
             if (playAudio !== undefined) {
-                playAudio.catch(err => console.log("Audio track error:", err));
+                playAudio.catch(err => console.log("Audio fail:", err));
             }
         }
 
@@ -162,13 +159,10 @@
             document.getElementById('status').className = 'status-dot ' + (d.discord_status || 'offline');
 
             const avatarImg = document.getElementById('avatar');
-            const faviconLink = document.getElementById('favicon');
             
-            // Fixed dynamic address string construction for live avatars
             if (d.discord_user && d.discord_user.avatar) {
                 const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
-                const dynamicUrl = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
-                avatarImg.src = dynamicUrl;
+                avatarImg.src = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
             }
 
             const cStatusBox = document.getElementById('custom-status');
@@ -178,7 +172,8 @@
                 let statusText = '';
                 if (customAct.emoji && customAct.emoji.name) statusText += customAct.emoji.name + ' ';
                 if (customAct.state) statusText += customAct.state;
-                                cStatusBox.textContent = statusText.trim();
+                
+                cStatusBox.textContent = statusText.trim();
                 cStatusBox.style.display = 'block';
             } else {
                 cStatusBox.style.display = 'none';
@@ -188,12 +183,12 @@
             if (d.listening_to_spotify && d.spotify) {
                 document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
                 document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
-                document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
-                spotifyBox.style.display = 'flex';
-            } else {
-                spotifyBox.style.display = 'none';
-            }
+            document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+            spotifyBox.style.display = 'flex';
+        } else {
+            spotifyBox.style.display = 'none';
         }
-    </script>
+    }
+</script>
 </body>
 </html>
