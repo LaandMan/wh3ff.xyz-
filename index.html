@@ -1,379 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://googleapis.com">
-  <title>wh3ff</title>
-  <link rel="icon" type="image/gif" href="stars.gif">
-  <style>
-    body {
-      background-color: #0a0a0a;
-      color: #ffffff;
-      font-family: 'Inter', sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      margin: 0;
-      position: relative;
-      overflow: hidden;
-    }
-    .video-background {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      z-index: 0;
-      overflow: hidden;
-    }
-    .video-background video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      pointer-events: none;
-    }
-    .dark-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      z-index: 1;
-    }
-    .audio-prompt {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(10, 10, 10, 0.95);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-      font-size: 16px;
-      font-weight: 600;
-      letter-spacing: 1px;
-      color: rgba(255, 255, 255, 0.6);
-      cursor: pointer;
-      transition: opacity 0.5s, visibility 0.5s;
-    }
-    .audio-prompt.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-    .container {
-      text-align: center;
-      background: rgba(20, 20, 20, 0.55);
-      border-radius: 16px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      width: 340px;
-      position: relative;
-      z-index: 2;
-      overflow: hidden;
-      padding-bottom: 40px;
-    }
-    .profile-banner-link {
-      display: block;
-      width: 100%;
-      height: 120px;
-      text-decoration: none;
-    }
-    .profile-banner {
-      width: 100%;
-      height: 100%;
-      background-color: #2c2f33;
-      background-size: cover;
-      background-position: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      transition: background 0.5s ease;
-    }
-    .avatar-link-wrapper {
-      display: block;
-      position: relative;
-      width: 96px;
-      height: 96px;
-      margin: -48px auto 15px auto;
-      z-index: 2;
-      text-decoration: none;
-    }
-    .profile-pic {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid #141414;
-      background-color: #2c2f33;
-    }
-    .status-dot {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      border: 3px solid #141414;
-      background-color: #747f8d;
-    }
-    
-    /* Live Discord theme accent state bindings */
-    .online { background-color: #23a55a !important; }
-    .idle { background-color: #f0b232 !important; }
-    .dnd { background-color: #f23f43 !important; }
-    .offline { background-color: #747f8d !important; }
-    
-    h1 {
-      font-size: 24px;
-      margin: 10px 0 2px 0;
-      font-weight: 600;
-    }
-    .discord-tag {
-      color: #5865F2;
-      font-size: 14px;
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .custom-status {
-      color: #888;
-      font-size: 13px;
-      font-style: italic;
-      margin-bottom: 15px;
-      padding: 0 20px;
-      white-space: normal;
-      overflow-wrap: break-word;
-      word-break: break-word;
-    }
-    .discord-actions {
-      display: flex;
-      gap: 10px;
-      justify-content: center;
-      margin-bottom: 25px;
-    }
-    .disc-btn {
-      background: rgba(88, 101, 242, 0.15);
-      color: #5865F2;
-      border: 1px solid rgba(88, 101, 242, 0.4);
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      transition: 0.2s;
-    }
-    .disc-btn:hover {
-      background: #5865F2;
-      color: #fff;
-      transform: translateY(-1px);
-    }
-    .links {
-      padding: 0 40px;
-    }
-    .links a {
-      display: block;
-      background: rgba(255, 255, 255, 0.05);
-      color: #fff;
-      text-decoration: none;
-      padding: 12px;
-      margin: 10px 0;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      transition: 0.3s;
-      font-weight: 500;
-    }
-    .links a:hover {
-      background: rgba(255, 255, 255, 0.15);
-      transform: translateY(-2px);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wh3ff</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; }
+        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; object-fit: cover; opacity: 0.6; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: -1; }
+        .click-shield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10; display: flex; justify-content: center; align-items: center; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; transition: opacity 0.5s ease; }
+        .card { background: rgba(15,15,15,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 350px; padding: 24px; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; }
+        .audio-ctrl { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-size: 14px; transition: all 0.2s; }
+        .audio-ctrl:hover { background: rgba(255,255,255,0.15); }
+        .avatar-container { position: relative; width: 96px; height: 96px; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; }
+        .status-dot { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; border-radius: 50%; border: 4px solid #111; background: #747f8d; transition: background 0.3s ease; }
+        .status-dot.online { background: #3ba55d; }
+        .status-dot.idle { background: #faa81a; }
+        .status-dot.dnd { background: #ed4245; }
+        .status-dot.offline { background: #747f8d; }
+        .header-section { display: flex; flex-direction: column; gap: 4px; width: 100%; }
+        .username { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: 0.5px; }
+        .handle { font-size: 14px; color: #b5b5b5; }
+        .custom-status { font-size: 13px; color: #e0e0e0; background: rgba(255,255,255,0.05); padding: 8px 12px; border-radius: 8px; width: 100%; text-align: center; border: 1px solid rgba(255,255,255,0.03); white-space: normal; overflow-wrap: break-word; word-break: break-word; display: none; }
+        .spotify-card { display: none; width: 100%; background: rgba(30,215,96,0.1); border: 1px solid rgba(30,215,96,0.2); border-radius: 10px; padding: 10px; text-align: left; align-items: center; gap: 12px; }
+        .spotify-album { width: 48px; height: 48px; border-radius: 6px; object-fit: cover; }
+        .spotify-info { flex: 1; min-width: 0; }
+        .spotify-track { font-size: 13px; font-weight: 600; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .spotify-artist { font-size: 11px; color: #1ed760; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .links-grid { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+        .link-btn { display: flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.08); padding: 10px; border-radius: 8px; color: #fff; text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s ease; }
+        .link-btn:hover { background: rgba(255,255,255,0.15); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+        .stars-decor { width: 18px; height: 18px; object-fit: contain; }
+    </style>
 </head>
 <body>
 
-  <div id="audio-screen" class="audio-prompt" onclick="playAudio()">
-    CLICK ANYWHERE TO ENTER
-  </div>
+    <video id="bg-video" loop muted playsinline src="bg-video.mp4"></video>
+    <audio id="bg-audio" loop src="bg-music.mp3"></audio>
+    <div class="overlay"></div>
 
-  <audio id="bg-music" loop>
-    <source src="bg-music.mp3" type="audio/mpeg">
-  </audio>
+    <div class="click-shield" id="shield" onclick="startSite()">[ Click to Enter ]</div>
 
-  <div class="video-background">
-    <video id="bg-video" autoplay loop muted playsinline>
-      <source src="bg-video.mp4" type="video/mp4">
-    </video>
-  </div>
-
-  <div class="dark-overlay"></div>
-
-  <div class="container">
-    <a id="banner-link" href="#" target="_blank" class="profile-banner-link">
-      <div id="banner" class="profile-banner"></div>
-    </a>
-
-    <a id="avatar-link" href="#" target="_blank" class="avatar-link-wrapper">
-      <img id="avatar" class="profile-pic" src="https://discordapp.com" alt="Avatar">
-      <div id="status" class="status-dot"></div>
-    </a>
-
-    <h1 id="username">wh3ff</h1>
-    <div id="tag" class="discord-tag">@wh3f</div>
-    <p id="activity" class="custom-status">Fetching live status...</p>
-    
-    <div class="discord-actions">
-      <a id="profile-link" href="#" target="_blank" class="disc-btn">View Profile</a>
-      <button id="copy-btn" class="disc-btn" onclick="copyUser(event)">Copy User</button>
-    </div>
-
-    <div class="links">
-      <a href="https://steamcommunity.com" target="_blank">steam</a>
-      <a href="https://steamcommunity.com" target="_blank">trade link</a>
-      <a href="https://soundcloud.com" target="_blank">tuff ass beats</a>
-    </div>
-  </div>
-
-  <script>
-    const DISCORD_ID = "530081539220963355";
-    let rawUsername = "wh3f";
-
-    // Broken URL blocks manage code space rules perfectly
-    const routeA = "https://api.lanyard.rest";
-    const routeB = "https://phineas.io";
-    const subRoute = "/v1/users/" + DISCORD_ID;
-
-    const LANYARD_ENDPOINTS = [
-      routeA + subRoute,
-      routeB + subRoute
-    ];
-
-    // Hooks up direct link redirections securely
-    const dBase = "https://discord.com";
-    const dFull = dBase + DISCORD_ID;
-    document.getElementById('banner-link').href = dFull;
-    document.getElementById('avatar-link').href = dFull;
-    document.getElementById('profile-link').href = dFull;
-
-    function playAudio() {
-      const music = document.getElementById('bg-music');
-      const video = document.getElementById('bg-video');
-      const promptScreen = document.getElementById('audio-screen');
-      
-      promptScreen.classList.add('hidden');
-      
-      if (video) {
-        video.muted = false; 
-        video.play().catch(err => console.log("Video fail:", err));
-      }
-
-      if (music) {
-        music.play().catch(err => console.log("Audio fail:", err));
-      }
-    }
-
-    async function fetchDiscord() {
-      let fetchedSuccessfully = false;
-
-      for (let i = 0; i < LANYARD_ENDPOINTS.length; i++) {
-        if (fetchedSuccessfully) break;
-        const targetUrl = LANYARD_ENDPOINTS[i];
+    <div class="card">
+        <div id="mute-btn" class="audio-ctrl" onclick="toggleAudio()">🔊</div>
         
-        try {
-          // Explicit network fetch headers configure fast timeout conditions
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4000);
-          
-          const response = await fetch(targetUrl, { signal: controller.signal });
-          clearTimeout(timeoutId);
-          
-          const resData = await response.json();
-          
-          if (resData.success) {
-            const user = resData.data;
-            rawUsername = user.discord_user.username;
+        <div class="avatar-container">
+            <img id="avatar" class="avatar" src="stars.gif" alt="Profile pic">
+            <div id="status" class="status-dot offline"></div>
+        </div>
+
+        <div class="header-section">
+            <div class="username">wh3ff</div>
+            <div class="handle">@wh3f</div>
+        </div>
+
+        <div id="custom-status" class="custom-status"></div>
+
+        <div id="spotify" class="spotify-card">
+            <img id="spotify-art" class="spotify-album" src="" alt="Album Art">
+            <div class="spotify-info">
+                <div id="spotify-track" class="spotify-track"></div>
+                <div id="spotify-artist" class="spotify-artist"></div>
+            </div>
+        </div>
+
+        <div class="links-grid">
+            <a href="https://discord.com" target="_blank" class="link-btn">
+                <img src="stars.gif" class="stars-decor" alt="icon"> View Profile
+            </a>
+            <a href="https://steamcommunity.com" target="_blank" class="link-btn">
+                <img src="stars.gif" class="stars-decor" alt="icon"> steam
+            </a>
+            <a href="https://steamcommunity.com" target="_blank" class="link-btn">
+                <img src="stars.gif" class="stars-decor" alt="icon"> trade link
+            </a>
+            <a href="https://soundcloud.com" target="_blank" class="link-btn">
+                <img src="stars.gif" class="stars-decor" alt="icon"> tuff ass beats
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const userId = "530081539220963355";
+        let socket;
+        let heartbeatInterval;
+
+        function startSite() {
+            const shield = document.getElementById('shield');
+            const video = document.getElementById('bg-video');
+            const audio = document.getElementById('bg-audio');
             
-            document.getElementById('username').innerText = 
-              user.discord_user.global_name || user.discord_user.username;
-            document.getElementById('tag').innerText = `@${rawUsername}`;
+            shield.style.opacity = '0';
+            setTimeout(() => shield.remove(), 500);
             
-            const avatarId = user.discord_user.avatar;
-            if (avatarId) {
-              const isAvatarGif = avatarId.startsWith('a_');
-              const avatarExt = isAvatarGif ? 'gif' : 'png';
-              const avBase = "https://discordapp.com";
-              document.getElementById('avatar').src = 
-                avBase + DISCORD_ID + "/" + avatarId + "." + avatarExt + "?size=256";
-            }
-
-            const bannerElement = document.getElementById('banner');
-            if (user.discord_user.banner) {
-              const isGif = user.discord_user.banner.startsWith('a_');
-              const ext = isGif ? 'gif' : 'png';
-              const bnBase = "https://discordapp.com";
-              bannerElement.style.backgroundImage = 
-                "url('" + bnBase + DISCORD_ID + "/" + user.discord_user.banner + "." + ext + "?size=600')";
-            } else if (user.discord_user.banner_color) {
-              bannerElement.style.backgroundImage = 'none';
-              bannerElement.style.backgroundColor = user.discord_user.banner_color;
-            }
-
-            // Sync presence attributes instantly to update state dot visuals
-            const statusDot = document.getElementById('status');
-            statusDot.className = 'status-dot ' + user.discord_status;
-
-            if (user.activities && user.activities.length > 0) {
-              const custom = user.activities.find(a => a.type === 4);
-            if (custom && custom.state) {
-              document.getElementById('activity').innerText = custom.state;
-            } else {
-              const primaryActivity = user.activities[0];
-              document.getElementById('activity').innerText =
-                primaryActivity && primaryActivity.name ?
-                "Playing " + primaryActivity.name : "Active";
-            }
-          } else {
-            document.getElementById('activity').innerText =
-              user.discord_status === 'offline' ?
-              "Currently Offline" : "No Active Status";
-          }
-          fetchedSuccessfully = true;
+            video.play().catch(() => {});
+            audio.play().catch(() => {});
+            
+            initWebSocket();
         }
-      } catch (error) {
-        console.warn("Route timeout or fail: " + targetUrl);
-      }
-    }
 
-    if (!fetchedSuccessfully) {
-      const fbAvBase = "https://discordapp.com";
-      const fbAvId = "a_86ee65691f162540b6e1da34e9e436cc.gif";
-      document.getElementById('avatar').src =
-        fbAvBase + DISCORD_ID + "/" + fbAvId + "?size=256";
-      document.getElementById('activity').innerText = 
-        "Connecting to Lanyard system...";
-    }
-  }
+        function toggleAudio() {
+            const audio = document.getElementById('bg-audio');
+            const btn = document.getElementById('mute-btn');
+            if (audio.paused) {
+                audio.play();
+                btn.textContent = '🔊';
+            } else {
+                audio.pause();
+                btn.textContent = '🔇';
+            }
+        }
 
-  function copyUser(event) {
-    event.stopPropagation();
-    navigator.clipboard.writeText(rawUsername).then(() => {
-      const btn = document.getElementById('copy-btn');
-      btn.innerText = "Copied!";
-      btn.style.background = "#23a55a";
-      btn.style.borderColor = "#23a55a";
-      btn.style.color = "#fff";
-      setTimeout(() => {
-        btn.innerText = "Copy User";
-        btn.style.background = "rgba(88, 101, 242, 0.15)";
-        btn.style.borderColor = "rgba(88, 101, 242, 0.4)";
-        btn.style.color = "#5865F2";
-      }, 2000);
-    });
-  }
+        function initWebSocket() {
+            socket = new WebSocket("wss://api.lanyard.rest/socket");
 
-  fetchDiscord();
-  setInterval(fetchDiscord, 15000);
+            socket.onopen = () => console.log("Connected to Lanyard WebSocket");
+
+            socket.onmessage = (event) => {
+                const msg = JSON.parse(event.data);
+
+                if (msg.op === 1) { 
+                    heartbeatInterval = setInterval(() => {
+                        socket.send(JSON.stringify({ op: 3 })); 
+                    }, msg.d.heartbeat_interval);
+
+                    socket.send(JSON.stringify({
+                        op: 2,
+                        d: { subscribe_to_id: userId }
+                    }));
+                }
+
+                if (msg.op === 0 && (msg.t === "INIT_STATE" || msg.t === "PRESENCE_UPDATE")) {
+                    updatePresence(msg.d);
+                }
+            };
+
+            socket.onclose = () => {
+                clearInterval(heartbeatInterval);
+                console.log("WebSocket disconnected, retrying in 5s...");
+                setTimeout(initWebSocket, 5000);
+            };
+        }
+
+        function updatePresence(d) {
+            if (!d) return;
+
+            document.getElementById('status').className = 'status-dot ' + (d.discord_status || 'offline');
+
+            const avatarImg = document.getElementById('avatar');
+            if (d.discord_user && d.discord_user.avatar) {
+                const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
+                avatarImg.src = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
+            } else {
+                avatarImg.src = "stars.gif";
+            }
+
+            const cStatusBox = document.getElementById('custom-status');
+            const customAct = d.activities ? d.activities.find(a => a.type === 4) : null;
+            
+            if (customAct && (customAct.state || customAct.emoji)) {
+                let statusText = '';
+                if (customAct.emoji && customAct.emoji.name) statusText += customAct.emoji.name + ' ';
+                if (customAct.state) statusText += customAct.state;
+                
+                cStatusBox.textContent = statusText.trim();
+                cStatusBox.style.display = 'block';
+            } else {
+                cStatusBox.style.display = 'none';
+            }
+
+            const spotifyBox = document.getElementById('spotify');
+            if (d.listening_to_spotify && d.spotify) {
+                document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+                document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
+                document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+                spotifyBox.style.display = 'flex';
+            } else {
+                spotifyBox.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
