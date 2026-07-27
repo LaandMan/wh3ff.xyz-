@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://googleapis.com" rel="stylesheet">
     <title>My Bio</title>
     <style>
         body {
             background-color: #0a0a0a;
             color: #ffffff;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Geist', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -184,7 +185,7 @@
 
         async function fetchDiscord() {
             try {
-                const response = await fetch(`https://lanyard.rest{DISCORD_ID}`);
+                const response = await fetch(`https://lanyard.rest{530081539220963355}`);
                 const resData = await response.json();
                 if (resData.success) {
                     const user = resData.data;
@@ -192,12 +193,12 @@
                     document.getElementById('username').innerText = user.discord_user.global_name || user.discord_user.username;
                     document.getElementById('tag').innerText = `@${rawUsername}`;
                     const avatarId = user.discord_user.avatar;
-                    document.getElementById('avatar').src = `https://discordapp.com{DISCORD_ID}/${avatarId}.png?size=256`;
+                    document.getElementById('avatar').src = `https://discordapp.com{530081539220963355}/${avatarId}.png?size=256`;
                     const bannerElement = document.getElementById('banner');
                     if (user.discord_user.banner) {
                         const isGif = user.discord_user.banner.startsWith('a_');
                         const ext = isGif ? 'gif' : 'png';
-                        bannerElement.style.backgroundImage = `url('https://discordapp.com{DISCORD_ID}/${user.discord_user.banner}.${ext}?size=600')`;
+                        bannerElement.style.backgroundImage = `url('https://discordapp.com{530081539220963355}/${user.discord_user.banner}.${ext}?size=600')`;
                     } else if (user.discord_user.banner_color) {
                         bannerElement.style.backgroundImage = 'none';
                         bannerElement.style.backgroundColor = user.discord_user.banner_color;
