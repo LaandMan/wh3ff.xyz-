@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wh3ff</title>
+    <link id="favicon" rel="icon" type="image/png" href="https://discordapp.com">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; }
         #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; object-fit: cover; opacity: 0.6; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: -1; }
-        .click-shield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10; display: flex; justify-content: center; align-items: center; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; transition: opacity 0.5s ease; }
+        .click-shield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10; display: flex; justify-content: center; align-items: center; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; transition: opacity 0.5s ease; user-select: none; }
         .card { background: rgba(15,15,15,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 350px; padding: 24px; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; }
-        .audio-ctrl { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-size: 14px; transition: all 0.2s; }
+        .audio-ctrl { position: absolute; top: 16px; right: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer; color: #fff; font-size: 14px; transition: all 0.2s; user-select: none; }
         .audio-ctrl:hover { background: rgba(255,255,255,0.15); }
         .avatar-container { position: relative; width: 96px; height: 96px; }
-        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; }
+        .avatar { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; background: #222; border: 2px solid rgba(255,255,255,0.1); }
         .status-dot { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; border-radius: 50%; border: 4px solid #111; background: #747f8d; transition: background 0.3s ease; }
         .status-dot.online { background: #3ba55d; }
         .status-dot.idle { background: #faa81a; }
@@ -47,7 +48,7 @@
         <div id="mute-btn" class="audio-ctrl" onclick="toggleAudio()">🔊</div>
         
         <div class="avatar-container">
-            <img id="avatar" class="avatar" src="stars.gif" alt="Profile pic">
+            <img id="avatar" class="avatar" src="https://discordapp.com" alt="Profile pic">
             <div id="status" class="status-dot offline"></div>
         </div>
 
@@ -87,6 +88,8 @@
         let socket;
         let heartbeatInterval;
 
+        initWebSocket();
+
         function startSite() {
             const shield = document.getElementById('shield');
             const video = document.getElementById('bg-video');
@@ -95,10 +98,8 @@
             shield.style.opacity = '0';
             setTimeout(() => shield.remove(), 500);
             
-            video.play().catch(() => {});
-            audio.play().catch(() => {});
-            
-            initWebSocket();
+            video.play().catch(err => console.log("Video playback blocked:", err));
+            audio.play().catch(err => console.log("Audio playback blocked:", err));
         }
 
         function toggleAudio() {
@@ -115,8 +116,6 @@
 
         function initWebSocket() {
             socket = new WebSocket("wss://api.lanyard.rest/socket");
-
-            socket.onopen = () => console.log("Connected to Lanyard WebSocket");
 
             socket.onmessage = (event) => {
                 const msg = JSON.parse(event.data);
@@ -139,7 +138,6 @@
 
             socket.onclose = () => {
                 clearInterval(heartbeatInterval);
-                console.log("WebSocket disconnected, retrying in 5s...");
                 setTimeout(initWebSocket, 5000);
             };
         }
@@ -150,11 +148,15 @@
             document.getElementById('status').className = 'status-dot ' + (d.discord_status || 'offline');
 
             const avatarImg = document.getElementById('avatar');
+            const faviconLink = document.getElementById('favicon');
+            
             if (d.discord_user && d.discord_user.avatar) {
                 const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
-                avatarImg.src = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
-            } else {
-                avatarImg.src = "stars.gif";
+                const dynamicUrl = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
+                const favUrl = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=32`;
+                
+                avatarImg.src = dynamicUrl;
+                if (faviconLink) faviconLink.href = favUrl;
             }
 
             const cStatusBox = document.getElementById('custom-status');
@@ -173,14 +175,11 @@
 
             const spotifyBox = document.getElementById('spotify');
             if (d.listening_to_spotify && d.spotify) {
-                document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
-                document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
-                document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
-                spotifyBox.style.display = 'flex';
-            } else {
-                spotifyBox.style.display = 'none';
-            }
+            document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+            document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
+            document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+            spotifyBox.style.display = 'flex';
+        } else {
+            spotifyBox.style.display = 'none';
         }
-    </script>
-</body>
-</html>
+    }
