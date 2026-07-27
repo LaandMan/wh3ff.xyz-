@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://googleapis.com" rel="stylesheet">
+  <link rel="stylesheet" href="https://googleapis.com">
   <title>wh3ff</title>
   <link rel="icon" type="image/gif" href="stars.gif">
   <style>
@@ -134,6 +134,9 @@
       font-style: italic;
       margin-bottom: 15px;
       padding: 0 20px;
+      white-space: normal;
+      overflow-wrap: break-word;
+      word-break: break-word;
     }
     .discord-actions {
       display: flex;
@@ -181,7 +184,6 @@
 </head>
 <body>
 
-  <!-- Overlay screen handles play configurations directly -->
   <div id="audio-screen" class="audio-prompt" onclick="playAudio()">
     CLICK ANYWHERE TO ENTER
   </div>
@@ -191,7 +193,6 @@
   </audio>
 
   <div class="video-background">
-    <!-- Changed to include muted initially so modern desktop engines initialize loading state -->
     <video id="bg-video" autoplay loop muted playsinline>
       <source src="bg-video.mp4" type="video/mp4">
     </video>
@@ -232,16 +233,13 @@
       
       promptScreen.classList.add('hidden');
       
-      // Forces the media track element to kick-start and run
       if (video) {
-        video.muted = false; // Unmutes audio output tracks bound inside video clip 
-        video.play().catch(err => console.log("Video track engine error:", err));
+        video.muted = false; 
+        video.play().catch(err => console.log("Video setup block:", err));
       }
 
       if (music) {
-        music.play().catch(err => {
-          console.log("Audio track engine error:", err);
-        });
+        music.play().catch(err => console.log("Audio setup block:", err));
       }
     }
 
@@ -256,6 +254,8 @@
           
           document.getElementById('username').innerText = user.discord_user.global_name || user.discord_user.username;
           document.getElementById('tag').innerText = `@${rawUsername}`;
+          
+          // Fixed User Redirect URI parameters targeting client paths directly
           document.getElementById('profile-link').href = `https://discord.com{DISCORD_ID}`;
           
           const avatarId = user.discord_user.avatar;
@@ -280,21 +280,21 @@
           const statusDot = document.getElementById('status');
           statusDot.className = 'status-dot ' + user.discord_status;
 
-          // Fixed the multi-activity array parsing indexing crash loop here
+          // Standardized object reference checks to avoid runtime script crashes
           if (user.activities && user.activities.length > 0) {
             const custom = user.activities.find(a => a.type === 4);
             if (custom && custom.state) {
               document.getElementById('activity').innerText = custom.state;
             } else {
-              // Pulls the name property safely from the first index entry inside the collection array list
-              document.getElementById('activity').innerText = `Playing ${user.activities[0].name}`;
+              const primaryActivity = user.activities[0];
+              document.getElementById('activity').innerText = primaryActivity && primaryActivity.name ? `Playing ${primaryActivity.name}` : "Active";
             }
           } else {
             document.getElementById('activity').innerText = user.discord_status === 'offline' ? "Currently Offline" : "No Active Status";
           }
         }
       } catch (error) {
-        console.error("API tracking connection failure:", error);
+        console.error("API mapping failure:", error);
         document.getElementById('username').innerText = "Status Offline";
       }
     }
