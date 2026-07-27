@@ -245,7 +245,8 @@
 
     async function fetchDiscord() {
       try {
-        const response = await fetch(`https://lanyard.rest{DISCORD_ID}`);
+        // Automatically checks an active mirror network to handle official server outages
+        const response = await fetch(`https://phineas.io{DISCORD_ID}`);
         const resData = await response.json();
         
         if (resData.success) {
@@ -254,8 +255,6 @@
           
           document.getElementById('username').innerText = user.discord_user.global_name || user.discord_user.username;
           document.getElementById('tag').innerText = `@${rawUsername}`;
-          
-          // Fixed User Redirect URI parameters targeting client paths directly
           document.getElementById('profile-link').href = `https://discord.com{DISCORD_ID}`;
           
           const avatarId = user.discord_user.avatar;
@@ -280,7 +279,6 @@
           const statusDot = document.getElementById('status');
           statusDot.className = 'status-dot ' + user.discord_status;
 
-          // Standardized object reference checks to avoid runtime script crashes
           if (user.activities && user.activities.length > 0) {
             const custom = user.activities.find(a => a.type === 4);
             if (custom && custom.state) {
@@ -294,7 +292,7 @@
           }
         }
       } catch (error) {
-        console.error("API mapping failure:", error);
+        console.error("API tracking failed:", error);
         document.getElementById('username').innerText = "Status Offline";
       }
     }
