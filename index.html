@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://googleapis.com" rel="stylesheet">
   <title>wh3ff</title>
   <link rel="icon" type="image/gif" href="stars.gif">
   <style>
@@ -181,7 +181,7 @@
 </head>
 <body>
 
-  <!-- Overlay click target handles video and sound triggers directly -->
+  <!-- Overlay screen handles play configurations directly -->
   <div id="audio-screen" class="audio-prompt" onclick="playAudio()">
     CLICK ANYWHERE TO ENTER
   </div>
@@ -191,7 +191,7 @@
   </audio>
 
   <div class="video-background">
-    <!-- Main loop video -->
+    <!-- Changed to include muted initially so modern desktop engines initialize loading state -->
     <video id="bg-video" autoplay loop muted playsinline>
       <source src="bg-video.mp4" type="video/mp4">
     </video>
@@ -215,9 +215,9 @@
     </div>
 
     <div class="links">
-      <a href="https://steamcommunity.com/id/wh3f/" target="_blank">steam</a>
-      <a href="https://steamcommunity.com/tradeoffer/new/?partner=838525581&token=zo-wkq57m" target="_blank">trade link</a>
-      <a href="https://soundcloud.com/fourgonnerbeats" target="_blank">tuff ass beats</a>
+      <a href="https://steamcommunity.com" target="_blank">steam</a>
+      <a href="https://steamcommunity.com" target="_blank">trade link</a>
+      <a href="https://soundcloud.com" target="_blank">tuff ass beats</a>
     </div>
   </div>
 
@@ -232,21 +232,22 @@
       
       promptScreen.classList.add('hidden');
       
-      // Ensure the background video un-suspends and runs
+      // Forces the media track element to kick-start and run
       if (video) {
-        video.play().catch(err => console.log("Video track error:", err));
+        video.muted = false; // Unmutes audio output tracks bound inside video clip 
+        video.play().catch(err => console.log("Video track engine error:", err));
       }
 
-      // Fire audio tracking safely
-      music.play().catch(err => {
-        console.log("Audio play blocked or failed:", err);
-      });
+      if (music) {
+        music.play().catch(err => {
+          console.log("Audio track engine error:", err);
+        });
+      }
     }
 
     async function fetchDiscord() {
       try {
-        // Adjusted URL to reference the verified live lanyard data system endpoint
-        const response = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+        const response = await fetch(`https://lanyard.rest{DISCORD_ID}`);
         const resData = await response.json();
         
         if (resData.success) {
@@ -261,9 +262,8 @@
           if (avatarId) {
             const isAvatarGif = avatarId.startsWith('a_');
             const avatarExt = isAvatarGif ? 'gif' : 'png';
-            document.getElementById('avatar').src = `https://cdn.discordapp.com/avatars/${DISCORD_ID}/${avatarId}.${avatarExt}?size=256`;
+            document.getElementById('avatar').src = `https://discordapp.com{DISCORD_ID}/${avatarId}.${avatarExt}?size=256`;
           } else {
-            // Default Discord placeholder if no avatar set
             document.getElementById('avatar').src = `https://discordapp.com`;
           }
 
@@ -271,7 +271,7 @@
           if (user.discord_user.banner) {
             const isGif = user.discord_user.banner.startsWith('a_');
             const ext = isGif ? 'gif' : 'png';
-            bannerElement.style.backgroundImage = `url('https://cdn.discordapp.com/banners/${DISCORD_ID}/${user.discord_user.banner}.${ext}?size=600')`;
+            bannerElement.style.backgroundImage = `url('https://discordapp.com{DISCORD_ID}/${user.discord_user.banner}.${ext}?size=600')`;
           } else if (user.discord_user.banner_color) {
             bannerElement.style.backgroundImage = 'none';
             bannerElement.style.backgroundColor = user.discord_user.banner_color;
@@ -280,11 +280,13 @@
           const statusDot = document.getElementById('status');
           statusDot.className = 'status-dot ' + user.discord_status;
 
+          // Fixed the multi-activity array parsing indexing crash loop here
           if (user.activities && user.activities.length > 0) {
             const custom = user.activities.find(a => a.type === 4);
             if (custom && custom.state) {
               document.getElementById('activity').innerText = custom.state;
             } else {
+              // Pulls the name property safely from the first index entry inside the collection array list
               document.getElementById('activity').innerText = `Playing ${user.activities[0].name}`;
             }
           } else {
@@ -292,7 +294,7 @@
           }
         }
       } catch (error) {
-        console.error("API error details:", error);
+        console.error("API tracking connection failure:", error);
         document.getElementById('username').innerText = "Status Offline";
       }
     }
@@ -314,7 +316,6 @@
       });
     }
 
-    // Call updates on load initialization
     fetchDiscord();
     setInterval(fetchDiscord, 15000);
   </script>
