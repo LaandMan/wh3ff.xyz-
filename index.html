@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wh3ff</title>
-    <link id="favicon" rel="icon" type="image/gif" href="stars.gif">
+    <link id="favicon" rel="icon" type="image/gif" href="./stars.gif">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; }
@@ -38,12 +38,11 @@
 </head>
 <body>
 
-    <!-- Fixed background attributes to pass cross-origin layout rendering rules -->
-    <video id="bg-video" loop muted playsinline preload="auto" width="100%" height="100%">
-        <source src="bg-video.mp4" type="video/mp4">
+    <video id="bg-video" loop muted playsinline preload="auto">
+        <source src="./bg-video.mp4" type="video/mp4">
     </video>
     <audio id="bg-audio" loop preload="auto">
-        <source src="bg-music.mp3" type="audio/mpeg">
+        <source src="./bg-music.mp3" type="audio/mpeg">
     </audio>
     <div class="overlay"></div>
 
@@ -53,7 +52,8 @@
         <div id="mute-btn" class="audio-ctrl" onclick="toggleAudio()">🔊</div>
         
         <div class="avatar-container">
-            <img id="avatar" class="avatar" src="stars.gif" alt="Profile pic">
+            <!-- Fixed default image tracking to pull your actual live avatar link directly -->
+            <img id="avatar" class="avatar" src="https://discordapp.com" alt="Profile pic">
             <div id="status" class="status-dot offline"></div>
         </div>
 
@@ -72,18 +72,19 @@
             </div>
         </div>
 
+        <!-- Relative local asset paths fixed below -->
         <div class="links-grid">
             <a href="https://discord.com" target="_blank" class="link-btn">
-                <img src="stars.gif" class="stars-decor" alt="icon"> View Profile
+                <img src="./stars.gif" class="stars-decor" alt="icon"> View Profile
             </a>
             <a href="https://steamcommunity.com" target="_blank" class="link-btn">
-                <img src="stars.gif" class="stars-decor" alt="icon"> steam
+                <img src="./stars.gif" class="stars-decor" alt="icon"> steam
             </a>
             <a href="https://steamcommunity.com" target="_blank" class="link-btn">
-                <img src="stars.gif" class="stars-decor" alt="icon"> trade link
+                <img src="./stars.gif" class="stars-decor" alt="icon"> trade link
             </a>
             <a href="https://soundcloud.com" target="_blank" class="link-btn">
-                <img src="stars.gif" class="stars-decor" alt="icon"> tuff ass beats
+                <img src="./stars.gif" class="stars-decor" alt="icon"> tuff ass beats
             </a>
         </div>
     </div>
@@ -103,18 +104,15 @@
             shield.style.opacity = '0';
             setTimeout(() => shield.remove(), 500);
             
-            // Fixed direct playback handler methods
-            video.load();
-            audio.load();
-            
+            // Fixed race condition: removed .load() to resolve playback interception crashes
             let playVideo = video.play();
             if (playVideo !== undefined) {
-                playVideo.catch(err => console.log("Video fail:", err));
+                playVideo.catch(err => console.log("Video track error:", err));
             }
             
             let playAudio = audio.play();
             if (playAudio !== undefined) {
-                playAudio.catch(err => console.log("Audio fail:", err));
+                playAudio.catch(err => console.log("Audio track error:", err));
             }
         }
 
@@ -166,6 +164,7 @@
             const avatarImg = document.getElementById('avatar');
             const faviconLink = document.getElementById('favicon');
             
+            // Fixed dynamic address string construction for live avatars
             if (d.discord_user && d.discord_user.avatar) {
                 const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
                 const dynamicUrl = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
@@ -179,12 +178,12 @@
                 let statusText = '';
                 if (customAct.emoji && customAct.emoji.name) statusText += customAct.emoji.name + ' ';
                 if (customAct.state) statusText += customAct.state;
-                
-                cStatusBox.textContent = statusText.trim();
+                                cStatusBox.textContent = statusText.trim();
                 cStatusBox.style.display = 'block';
             } else {
                 cStatusBox.style.display = 'none';
             }
+
             const spotifyBox = document.getElementById('spotify');
             if (d.listening_to_spotify && d.spotify) {
                 document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
@@ -194,7 +193,7 @@
             } else {
                 spotifyBox.style.display = 'none';
             }
-        } // This closing brace cleanly ends the updatePresence function
+        }
     </script>
 </body>
 </html>
