@@ -4,11 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>wh3ff</title>
-    <link id="favicon" rel="icon" type="image/png" href="https://discordapp.com">
+    <link id="favicon" rel="icon" type="image/gif" href="stars.gif">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         body, html { width: 100%; height: 100%; overflow: hidden; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; }
-        #bg-video { position: fixed; right: 0; bottom: 0; min-width: 100%; min-height: 100%; width: auto; height: auto; z-index: -2; object-fit: cover; opacity: 0.6; }
+        #bg-video { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2; object-fit: cover; opacity: 0.6; pointer-events: none; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: -1; }
         .click-shield { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10; display: flex; justify-content: center; align-items: center; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-size: 14px; transition: opacity 0.5s ease; user-select: none; }
         .card { background: rgba(15,15,15,0.75); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; width: 350px; padding: 24px; text-align: center; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; gap: 14px; position: relative; }
@@ -38,8 +38,13 @@
 </head>
 <body>
 
-    <video id="bg-video" loop muted playsinline src="bg-video.mp4"></video>
-    <audio id="bg-audio" loop src="bg-music.mp3"></audio>
+    <!-- Fixed background attributes to pass cross-origin layout rendering rules -->
+    <video id="bg-video" loop muted playsinline preload="auto" width="100%" height="100%">
+        <source src="bg-video.mp4" type="video/mp4">
+    </video>
+    <audio id="bg-audio" loop preload="auto">
+        <source src="bg-music.mp3" type="audio/mpeg">
+    </audio>
     <div class="overlay"></div>
 
     <div class="click-shield" id="shield" onclick="startSite()">[ Click to Enter ]</div>
@@ -48,7 +53,7 @@
         <div id="mute-btn" class="audio-ctrl" onclick="toggleAudio()">🔊</div>
         
         <div class="avatar-container">
-            <img id="avatar" class="avatar" src="https://discordapp.com" alt="Profile pic">
+            <img id="avatar" class="avatar" src="stars.gif" alt="Profile pic">
             <div id="status" class="status-dot offline"></div>
         </div>
 
@@ -98,8 +103,19 @@
             shield.style.opacity = '0';
             setTimeout(() => shield.remove(), 500);
             
-            video.play().catch(err => console.log("Video playback blocked:", err));
-            audio.play().catch(err => console.log("Audio playback blocked:", err));
+            // Fixed direct playback handler methods
+            video.load();
+            audio.load();
+            
+            let playVideo = video.play();
+            if (playVideo !== undefined) {
+                playVideo.catch(err => console.log("Video fail:", err));
+            }
+            
+            let playAudio = audio.play();
+            if (playAudio !== undefined) {
+                playAudio.catch(err => console.log("Audio fail:", err));
+            }
         }
 
         function toggleAudio() {
@@ -153,10 +169,7 @@
             if (d.discord_user && d.discord_user.avatar) {
                 const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
                 const dynamicUrl = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=256`;
-                const favUrl = `https://discordapp.com{userId}/${d.discord_user.avatar}.${ext}?size=32`;
-                
                 avatarImg.src = dynamicUrl;
-                if (faviconLink) faviconLink.href = favUrl;
             }
 
             const cStatusBox = document.getElementById('custom-status');
@@ -172,14 +185,15 @@
             } else {
                 cStatusBox.style.display = 'none';
             }
-
-            const spotifyBox = document.getElementById('spotify');
-            if (d.listening_to_spotify && d.spotify) {
-            document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
-            document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
-            document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
-            spotifyBox.style.display = 'flex';
-        } else {
-            spotifyBox.style.display = 'none';
+const spotifyBox = document.getElementById('spotify');
+if (d.listening_to_spotify && d.spotify) {
+    document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+    document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
+    document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+    spotifyBox.style.display = 'flex';
+} else {
+    spotifyBox.style.display = 'none';
         }
-    }
+    </script>
+</body>
+</html>
