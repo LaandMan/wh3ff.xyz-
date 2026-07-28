@@ -190,21 +190,21 @@ function updatePresence(d) {
 
 
     // Spotify
-const spotifyBox = document.getElementById('spotify');
+    const spotifyBox = document.getElementById('spotify');
 
-const spotify = d.spotify;
+    const spotifyActivity = d.activities?.find(
+        activity => activity.name === "Spotify"
+    );
 
-if (spotify) {
-    console.log("FOUND SPOTIFY:", spotify);
+    if (spotifyActivity && d.spotify) {
+        document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+        document.getElementById('spotify-track').textContent = d.spotify.song || 'Unknown Track';
+        document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
 
-    document.getElementById('spotify-art').src = spotify.album_art_url;
-    document.getElementById('spotify-track').textContent = spotify.song;
-    document.getElementById('spotify-artist').textContent = spotify.artist;
-
-    spotifyBox.style.display = 'flex';
-} else {
-    console.log("NO SPOTIFY DATA");
-    spotifyBox.style.display = 'none';
+        spotifyBox.style.display = 'flex';
+    } else {
+        spotifyBox.style.display = 'none';
+    }
 }
 </script>
 </body>
