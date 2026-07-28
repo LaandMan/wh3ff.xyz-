@@ -61,7 +61,6 @@
             <div class="username">wh3ff</div>
             <div class="handle">@wh3f</div>
 </div>
-        </div>
 
         <div id="custom-status" class="custom-status"></div>
 
@@ -181,16 +180,18 @@
                 cStatusBox.style.display = 'none';
             }
 
-            const spotifyBox = document.getElementById('spotify');
-            if (d.listening_to_spotify && d.spotify) {
-                document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
-                document.getElementById('spotify-track').textContent = d.spotify.track || 'Unknown Track';
-            document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
-            spotifyBox.style.display = 'flex';
-        } else {
-            spotifyBox.style.display = 'none';
-        }
-    }
+const spotifyBox = document.getElementById('spotify');
+
+if (d.listening_to_spotify && d.spotify) {
+    document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+    document.getElementById('spotify-track').textContent = d.spotify.song || 'Unknown Track';
+    document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+
+    spotifyBox.style.display = 'flex';
+} else {
+    spotifyBox.style.display = 'none';
+}
+}
 </script>
 </body>
 </html>
