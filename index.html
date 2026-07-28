@@ -196,11 +196,14 @@ function updatePresence(d) {
         activity => activity.name === "Spotify"
     );
 
-    if (spotifyActivity && d.spotify) {
-        document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
-        document.getElementById('spotify-track').textContent = d.spotify.song || 'Unknown Track';
-        document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+console.log("SPOTIFY DATA:", d.spotify);
 
+if (spotifyActivity && d.spotify) {
+    console.log("SPOTIFY FOUND");
+
+    document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+    document.getElementById('spotify-track').textContent = d.spotify.song || 'Unknown Track';
+    document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
         spotifyBox.style.display = 'flex';
     } else {
         spotifyBox.style.display = 'none';
