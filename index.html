@@ -154,43 +154,57 @@
             };
         }
 
-        function updatePresence(d) {
-            if (!d) return;
+function updatePresence(d) {
+    if (!d) return;
 
-            document.getElementById('status').className = 'status-dot ' + (d.discord_status || 'offline');
+    // status
+    document.getElementById('status').className =
+        'status-dot ' + (d.discord_status || 'offline');
 
-            const avatarImg = document.getElementById('avatar');
-            
-            if (d.discord_user && d.discord_user.avatar) {
-                const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
-                avatarImg.src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.${ext}?size=256`;
-            }
+    // avatar
+    const avatarImg = document.getElementById('avatar');
 
-            const cStatusBox = document.getElementById('custom-status');
-            const customAct = d.activities ? d.activities.find(a => a.type === 4) : null;
-            
-            if (customAct && (customAct.state || customAct.emoji)) {
-                let statusText = '';
-                if (customAct.emoji && customAct.emoji.name) statusText += customAct.emoji.name + ' ';
-                if (customAct.state) statusText += customAct.state;
-                
-                cStatusBox.textContent = statusText.trim();
-                cStatusBox.style.display = 'block';
-            } else {
-                cStatusBox.style.display = 'none';
-            }
+    if (d.discord_user && d.discord_user.avatar) {
+        const ext = d.discord_user.avatar.startsWith('a_') ? 'gif' : 'png';
+        avatarImg.src = `https://cdn.discordapp.com/avatars/${d.discord_user.id}/${d.discord_user.avatar}.${ext}?size=256`;
+    }
 
-const spotifyBox = document.getElementById('spotify');
+    // custom status
+    const cStatusBox = document.getElementById('custom-status');
+    const customAct = d.activities?.find(a => a.type === 4);
 
-if (d.listening_to_spotify && d.spotify) {
-    document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
-    document.getElementById('spotify-track').textContent = d.spotify.song || 'Unknown Track';
-    document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+    if (customAct && (customAct.state || customAct.emoji)) {
+        let statusText = '';
 
-    spotifyBox.style.display = 'flex';
-} else {
-    spotifyBox.style.display = 'none';
-}
+        if (customAct.emoji && customAct.emoji.name)
+            statusText += customAct.emoji.name + ' ';
+
+        if (customAct.state)
+            statusText += customAct.state;
+
+        cStatusBox.textContent = statusText.trim();
+        cStatusBox.style.display = 'block';
+    } else {
+        cStatusBox.style.display = 'none';
+    }
+
+
+    // Spotify
+    const spotifyBox = document.getElementById('spotify');
+
+    const spotifyActivity = d.activities?.find(
+        activity => activity.name === "Spotify"
+    );
+
+    if (spotifyActivity && d.spotify) {
+        document.getElementById('spotify-art').src = d.spotify.album_art_url || '';
+        document.getElementById('spotify-track').textContent = d.spotify.song || 'Unknown Track';
+        document.getElementById('spotify-artist').textContent = d.spotify.artist || 'Unknown Artist';
+
+        spotifyBox.style.display = 'flex';
+    } else {
+        spotifyBox.style.display = 'none';
+    }
 }
 </script>
 </body>
