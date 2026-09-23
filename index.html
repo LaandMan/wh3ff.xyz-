@@ -4,27 +4,27 @@
     <title>wh3ff</title>
     <link id="favicon" rel="icon" type="image/gif" href="./stars.gif">
     <style>
-        /* 1. Define your uploaded local font files */
         @font-face {
             font-family: "Geist";
-            src: url("./Geist-Regular.woff2") format("woff2");
+            src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@5.3.0/latin-400-normal.woff2") format("woff2");
             font-weight: 400;
             font-style: normal;
+            font-display: block;
         }
 
         @font-face {
             font-family: "Geist";
-            src: url("./Geist-Bold.woff2") format("woff2");
+            src: url("https://cdn.jsdelivr.net/fontsource/fonts/geist-sans@5.3.0/latin-700-normal.woff2") format("woff2");
             font-weight: 700;
             font-style: normal;
+            font-display: block;
         }
 
-        /* 2. Your existing styles (already set to use "Geist") */
         * { 
             box-sizing: border-box; 
             margin: 0; 
             padding: 0; 
-            font-family: "Geist", sans-serif; 
+            font-family: "Geist", sans-serif !important; 
         }
         
         body, html { width: 100%; height: 100%; overflow: hidden; background: transparent; color: #fff; display: flex; justify-content: center; align-items: center; position: relative; }
